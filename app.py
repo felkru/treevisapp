@@ -4,7 +4,6 @@ from streamlit_tags import st_tags
 import time
 import re
 
-
 def extract_dicts(input_string):
     # Define the regex pattern
     pattern = r'\(([^,]*),([^)]*)\)|([^,]+)'
@@ -23,6 +22,10 @@ def extract_dicts(input_string):
     return result
 
 "# Jarons Tree Creator"
+
+# instruction image
+with st.expander("Tutorial", expanded=False):
+    st.image('tutorial.png')
 
 # Create the graph
 graph = pydot.Dot("my_graph", graph_type="graph", bgcolor="white")
