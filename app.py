@@ -30,10 +30,9 @@ with st.expander("Tutorial", expanded=False):
 # Create the graph
 graph = pydot.Dot("my_graph", graph_type="graph", bgcolor="white")
 
-"## Input:"
-
 st.session_state['edges'] = st_tags(
-        text="e.g. A,B or (A, A1),B"
+        text="enter A,B or (A, A1),B and hit enter",
+        label="## Input:"
     )
 
 # Edges for debug purposes
