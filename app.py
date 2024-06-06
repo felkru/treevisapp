@@ -2,28 +2,37 @@ import streamlit as st
 import pydot
 from IPython.display import Image, display
 from streamlit_tags import st_tags
+import time
 
 "# Jarons Tree Creator"
 
-if 'edges' not in st.session_state:
-    st.session_state['edges'] = []
+n_edges = 0
+n_session = 0
+
+
+def new_session(n_session=n_session):
+    st.session_state['edges'] = st_tags(
+        label="Add edges. Format: 'Node1,Node2':",
+        text="e.g. A,B",
+        key=n_session,
+    )
+    n_edges = 0
+    n_session += 1
+
 
 # Create the graph
 graph = pydot.Dot("my_graph", graph_type="graph", bgcolor="white")
 
 "## Inputs:"
-txt_input = st.text_input("Add edges. Format: 'Node1,Node2':", placeholder='A,B')
+st.button("Reset", on_click=new_session)
 
-if txt_input:
-    st.session_state['edges'] += [txt_input.split(",")]
+new_session(n_session)
 
 # Edges for debug purposes
 # st.write(st.session_state['edges'])
 
-for edge in st.session_state['edges']:
-    graph.add_edge(pydot.Edge(edge[0], edge[1], color="black"))
-
-st.button("Clear", on_click=lambda: st.session_state.edges.clear())
+for edge in [e.split(",") for e in st.session_state['edges']]:
+    graph.add_edge(pydot.Edge(edge[0], edge[1]))
 
 "## Preview:"
 # Save the graph to a file
