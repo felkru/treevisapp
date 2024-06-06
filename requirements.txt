@@ -2,3 +2,4 @@ streamlit
 pydot
 graphviz
 IPython
+streamlit-tags
