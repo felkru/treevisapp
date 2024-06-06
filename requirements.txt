@@ -1,3 +1,4 @@
 streamlit
 pydot
 graphviz
+IPython
