@@ -6,33 +6,21 @@ import time
 
 "# Jarons Tree Creator"
 
-n_edges = 0
-n_session = 0
-
-
-def new_session(n_session=n_session):
-    st.session_state['edges'] = st_tags(
-        label="Add edges. Format: 'Node1,Node2':",
-        text="e.g. A,B",
-        key=n_session,
-    )
-    n_edges = 0
-    n_session += 1
-
-
 # Create the graph
 graph = pydot.Dot("my_graph", graph_type="graph", bgcolor="white")
 
 "## Inputs:"
-st.button("Reset", on_click=new_session)
 
-new_session(n_session)
+st.session_state['edges'] = st_tags(
+        label="Add edges. Format: 'Node1,Node2':",
+        text="e.g. A,B"
+    )
 
 # Edges for debug purposes
 # st.write(st.session_state['edges'])
 
-for edge in [e.split(",") for e in st.session_state['edges']]:
-    graph.add_edge(pydot.Edge(edge[0], edge[1]))
+for edge in [e.split(",") for e in st.session_state['edges'] if ',' in e]:
+    graph.add_edge(pydot.Edge(pydot.Node(edge[0]), pydot.Node(edge[1])))
 
 "## Preview:"
 # Save the graph to a file
