@@ -1,7 +1,5 @@
 import streamlit as st
 import pydot
-from streamlit_tags import st_tags
-import time
 import re
 
 def extract_dicts(input_string):
@@ -27,18 +25,17 @@ def extract_dicts(input_string):
 with st.expander("Tutorial", expanded=False):
     st.image('tutorial.png')
 
+uploaded_file = st.file_uploader("Import Tree", type="txt")
+if uploaded_file is not None:
+    file_str = uploaded_file.getvalue().decode("utf-8")
+    st.session_state['edges'] = st.text_input(label="Enter A,B;B,C", key="edge_input_value", value=file_str)
+else:
+    st.session_state['edges'] = st.text_input(label="Enter A,B;B,C", key="edge_input_value")
+
 # Create the graph
 graph = pydot.Dot("my_graph", graph_type="graph", bgcolor="white")
 
-st.session_state['edges'] = st_tags(
-        text="enter A,B or (A, A1),B and hit enter",
-        label="## Input:"
-    )
-
-# Edges for debug purposes
-# st.session_state['edges']
-
-for edge in [e for e in st.session_state['edges'] if ',' in e]:
+for edge in st.session_state['edges'].split(" - "):
     edge = extract_dicts(edge)
 
     node1 = pydot.Node(edge[0]['id'], label=edge[0]['label'])
@@ -50,14 +47,22 @@ for edge in [e for e in st.session_state['edges'] if ',' in e]:
 
 "## Preview:"
 # Save the graph to a file
-graph.set_size('"10,10!"')
+graph.set_size(f'"{10 + 1.6 * len(st.session_state["edges"])},{10 + 1.6 * len(st.session_state["edges"])}!"')
 graph.write_png('graph.png')
+graph.write_svg('graph.svg')
 
 st.image('graph.png')
 
 st.download_button(
-    label="Download Image",
-    data=graph.create_png(),
-    file_name="graph.png",
+    label="Download SVG",
+    data=graph.create_svg(),
+    file_name="graph.svg",
     mime="image/png"
+)
+
+st.download_button(
+    label="Export Tree",
+    data=str(st.session_state['edges']),
+    file_name="tree.txt",
+    mime="text/plain"
 )
